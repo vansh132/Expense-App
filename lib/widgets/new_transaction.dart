@@ -1,6 +1,7 @@
-// ignore_for_file: use_key_in_widget_constructors, prefer_const_constructors, sort_child_properties_last, prefer_const_constructors_in_immutables
+// ignore_for_file: use_key_in_widget_constructors, prefer_const_constructors, sort_child_properties_last, prefer_const_constructors_in_immutables, unnecessary_null_comparison
 
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 class NewTransaction extends StatefulWidget {
   final Function addTx;
@@ -12,21 +13,37 @@ class NewTransaction extends StatefulWidget {
 }
 
 class _NewTransactionState extends State<NewTransaction> {
-  final titleController = TextEditingController();
+  final _titleController = TextEditingController();
+  final _amountController = TextEditingController();
+  DateTime? _selectedDate;
 
-  final amountController = TextEditingController();
+  void _submitData() {
+    final enteredTitle = _titleController.text;
+    final enteredAmount = double.parse(_amountController.text);
 
-  void submitData() {
-    final enteredTitle = titleController.text;
-    final enteredAmount = double.parse(amountController.text);
-
-    if (enteredTitle.isEmpty || enteredAmount <= 0) {
+    if (enteredTitle.isEmpty || enteredAmount <= 0 || _selectedDate == null) {
       return;
     }
 
-    widget.addTx(enteredTitle, enteredAmount);
+    widget.addTx(enteredTitle, enteredAmount, _selectedDate);
 
     Navigator.of(context).pop();
+  }
+
+  void _presentDatePicker() {
+    showDatePicker(
+            context: context,
+            initialDate: DateTime.now(),
+            firstDate: DateTime(2019),
+            lastDate: DateTime.now())
+        .then((pickedDate) {
+      if (pickedDate == null) {
+        return;
+      }
+      setState(() {
+        _selectedDate = pickedDate;
+      });
+    });
   }
 
   @override
@@ -40,18 +57,18 @@ class _NewTransactionState extends State<NewTransaction> {
           children: [
             TextField(
               decoration: InputDecoration(labelText: "Title"),
-              controller: titleController,
-              onSubmitted: (_) => submitData(),
+              controller: _titleController,
+              onSubmitted: (_) => _submitData(),
               /* onChanged: (value) {
                       titleInput = value;
                     }, */
             ),
             TextField(
               decoration: InputDecoration(labelText: "Amount"),
-              controller: amountController,
+              controller: _amountController,
               keyboardType: TextInputType.number,
               onSubmitted: (_) =>
-                  submitData(), // _ defines that there will be some argument that we are never going to use
+                  _submitData(), // _ defines that there will be some argument that we are never going to use
               /* onChanged: (value) {
                       amountInput = value;
                     }, */
@@ -60,12 +77,17 @@ class _NewTransactionState extends State<NewTransaction> {
               height: 70,
               child: Row(
                 children: [
-                  Text("No Date chosen!!"),
+                  _selectedDate == null
+                      ? Expanded(child: Text("No date chosen!"))
+                      : Expanded(
+                          child: Text(
+                              'Picked Date: ${DateFormat.yMd().format(_selectedDate!)}'),
+                        ),
                   TextButton(
                       style: ButtonStyle(
                           foregroundColor: MaterialStateProperty.all(
                               Theme.of(context).primaryColor)),
-                      onPressed: null,
+                      onPressed: _presentDatePicker,
                       child: Text(
                         "Choose date",
                         style: TextStyle(fontWeight: FontWeight.bold),
@@ -75,7 +97,7 @@ class _NewTransactionState extends State<NewTransaction> {
             ),
             ElevatedButton(
               onPressed:
-                  submitData, // pass reference when there is no anonomous function
+                  _submitData, // pass reference when there is no anonomous function
               child: Text(
                 "Add Transaction",
                 style: TextStyle(color: Colors.white),
