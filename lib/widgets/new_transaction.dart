@@ -56,12 +56,33 @@ class _NewTransactionState extends State<NewTransaction> {
                       amountInput = value;
                     }, */
             ),
-            TextButton(
+            Container(
+              height: 70,
+              child: Row(
+                children: [
+                  Text("No Date chosen!!"),
+                  TextButton(
+                      style: ButtonStyle(
+                          foregroundColor: MaterialStateProperty.all(
+                              Theme.of(context).primaryColor)),
+                      onPressed: null,
+                      child: Text(
+                        "Choose date",
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ))
+                ],
+              ),
+            ),
+            ElevatedButton(
               onPressed:
                   submitData, // pass reference when there is no anonomous function
-              child: Text("Add Transaction"),
+              child: Text(
+                "Add Transaction",
+                style: TextStyle(color: Colors.white),
+              ),
               style: ButtonStyle(
-                  foregroundColor: MaterialStateProperty.all(Colors.purple)),
+                  foregroundColor: MaterialStateProperty.all(
+                      Theme.of(context).primaryColor)),
             )
           ],
         ),
