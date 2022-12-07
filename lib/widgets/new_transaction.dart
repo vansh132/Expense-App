@@ -48,65 +48,71 @@ class _NewTransactionState extends State<NewTransaction> {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      elevation: 5,
-      child: Container(
-        padding: EdgeInsets.all(10),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.end,
-          children: [
-            TextField(
-              decoration: InputDecoration(labelText: "Title"),
-              controller: _titleController,
-              onSubmitted: (_) => _submitData(),
-              /* onChanged: (value) {
-                      titleInput = value;
-                    }, */
-            ),
-            TextField(
-              decoration: InputDecoration(labelText: "Amount"),
-              controller: _amountController,
-              keyboardType: TextInputType.number,
-              onSubmitted: (_) =>
-                  _submitData(), // _ defines that there will be some argument that we are never going to use
-              /* onChanged: (value) {
-                      amountInput = value;
-                    }, */
-            ),
-            Container(
-              height: 70,
-              child: Row(
-                children: [
-                  _selectedDate == null
-                      ? Expanded(child: Text("No date chosen!"))
-                      : Expanded(
-                          child: Text(
-                              'Picked Date: ${DateFormat.yMd().format(_selectedDate!)}'),
-                        ),
-                  TextButton(
-                      style: ButtonStyle(
-                          foregroundColor: MaterialStateProperty.all(
-                              Theme.of(context).primaryColor)),
-                      onPressed: _presentDatePicker,
-                      child: Text(
-                        "Choose date",
-                        style: TextStyle(fontWeight: FontWeight.bold),
-                      ))
-                ],
+    return SingleChildScrollView(
+      child: Card(
+        elevation: 5,
+        child: Container(
+          padding: EdgeInsets.only(
+              top: 10,
+              left: 10,
+              right: 10,
+              bottom: MediaQuery.of(context).viewInsets.bottom + 10),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              TextField(
+                decoration: InputDecoration(labelText: "Title"),
+                controller: _titleController,
+                onSubmitted: (_) => _submitData(),
+                /* onChanged: (value) {
+                        titleInput = value;
+                      }, */
               ),
-            ),
-            ElevatedButton(
-              onPressed:
-                  _submitData, // pass reference when there is no anonomous function
-              child: Text(
-                "Add Transaction",
-                style: TextStyle(color: Colors.white),
+              TextField(
+                decoration: InputDecoration(labelText: "Amount"),
+                controller: _amountController,
+                keyboardType: TextInputType.number,
+                onSubmitted: (_) =>
+                    _submitData(), // _ defines that there will be some argument that we are never going to use
+                /* onChanged: (value) {
+                        amountInput = value;
+                      }, */
               ),
-              style: ButtonStyle(
-                  foregroundColor: MaterialStateProperty.all(
-                      Theme.of(context).primaryColor)),
-            )
-          ],
+              Container(
+                height: 70,
+                child: Row(
+                  children: [
+                    _selectedDate == null
+                        ? Expanded(child: Text("No date chosen!"))
+                        : Expanded(
+                            child: Text(
+                                'Picked Date: ${DateFormat.yMd().format(_selectedDate!)}'),
+                          ),
+                    TextButton(
+                        style: ButtonStyle(
+                            foregroundColor: MaterialStateProperty.all(
+                                Theme.of(context).primaryColor)),
+                        onPressed: _presentDatePicker,
+                        child: Text(
+                          "Choose date",
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ))
+                  ],
+                ),
+              ),
+              ElevatedButton(
+                onPressed:
+                    _submitData, // pass reference when there is no anonomous function
+                child: Text(
+                  "Add Transaction",
+                  style: TextStyle(color: Colors.white),
+                ),
+                style: ButtonStyle(
+                    foregroundColor: MaterialStateProperty.all(
+                        Theme.of(context).primaryColor)),
+              )
+            ],
+          ),
         ),
       ),
     );
